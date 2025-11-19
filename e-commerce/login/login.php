@@ -1,13 +1,18 @@
 <?php
 // Start session to check if user is already logged in
-session_start();
+require_once '../settings/core.php';
 
-// If user is already logged in, redirect to homepage
-if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
-    header('Location: ../index.php');
-    exit();
+// If user is already logged in, redirect based on their role
+// if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
+    
+if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 2) {
+    // Customer role
+    header('Location: ../view/all_product.php'); 
+    exit();  
 }
+// }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +26,7 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background:linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -44,7 +49,7 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
         }
         
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             color: white;
             padding: 2rem;
             text-align: center;
@@ -75,7 +80,7 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
         }
         
         .btn-login {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             border: none;
             padding: 12px 30px;
             font-weight: 500;
@@ -93,7 +98,7 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
         .btn-login:disabled {
             transform: none;
             box-shadow: none;
-            background: #6c757d;
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
         }
         
         .register-link {
@@ -104,7 +109,7 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
         }
         
         .register-link a {
-            color: #667eea;
+            color:linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             text-decoration: none;
             font-weight: 500;
         }
@@ -120,13 +125,13 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #6c757d;
+            color:linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             cursor: pointer;
             z-index: 10;
         }
         
         .password-toggle:hover {
-            color: #667eea;
+            color:linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
         }
         
         .password-input-container {
@@ -148,14 +153,14 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
         .back-link a {
             color: white;
             text-decoration: none;
-            background: rgba(255, 255, 255, 0.2);
+            background:linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             padding: 10px 15px;
             border-radius: 25px;
             transition: all 0.3s ease;
         }
         
         .back-link a:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background:linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             transform: translateY(-2px);
         }
     </style>
@@ -175,7 +180,7 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
                     <div class="login-card">
                         <div class="card-header">
                             <h2><i class="fas fa-sign-in-alt me-2"></i>Welcome Back</h2>
-                            <p>Sign in to your ShoppN account</p>
+                            <p>Sign in to your Launder account</p>
                         </div>
                         <div class="card-body">
                             <!-- Success Message Container -->
@@ -221,9 +226,8 @@ if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true) {
         </div>
     </div>
 
-    <!-- Bootstrap 5.3 JS Bundle -->
+    <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom Login JS -->
-    <script src="/e-commerce/js/login.js"></script>
+    <script src="../js/login.js"></script>
 </body>
 </html>

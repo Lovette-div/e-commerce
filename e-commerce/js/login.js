@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Send login request via AJAX
             console.log('Sending AJAX request to login endpoint');
             
-            const response = await fetch('actions/login_customer_action.php', {
+            const response = await fetch('../actions/login_customer_action.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Success - handle redirect based on role
                 let redirectMessage = 'Login successful!';
                 
-                if (result.role == 2 || result.role === 'admin') {
+                if (result.role == 1 || result.role === 'admin') {
                     Location = '../admin/category.php';
                 } else {
                     redirectMessage += ' Redirecting to customer dashboard...';
@@ -244,9 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (result.redirect) {
                         console.log('Redirecting to:', result.redirect);
                         window.location.href = result.redirect;
-                    } else if (result.role == 2 || result.role === 'admin') {
+                    } else if (result.role == 1 || result.role === 'admin') {
                         console.log('Redirecting admin to category page');
-                        window.location.href = '../admin/category.php';
+                        window.location.href = '../dashboard/customer_dashboard.php';
                     } else {
                         console.log('Redirecting customer to dashboard');
                         window.location.href = '../customer/dashboard.php';

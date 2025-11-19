@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -33,7 +33,7 @@
         }
         
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             color: white;
             padding: 2rem;
             text-align: center;
@@ -64,7 +64,7 @@
         }
         
         .btn-register {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             border: none;
             padding: 12px 30px;
             font-weight: 500;
@@ -92,7 +92,7 @@
         }
         
         .login-link a {
-            color: #667eea;
+            color: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             text-decoration: none;
             font-weight: 500;
         }
@@ -460,8 +460,6 @@
     <!-- Bootstrap 5.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom Registration JS -->
-    <script src="../~lovette.philips/js/register.js"></script>
+    <script src="../js/register.js"></script>
 </body>
-
 </html>
-

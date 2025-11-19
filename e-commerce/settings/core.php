@@ -6,7 +6,7 @@ ob_start();
 
 
 function isLoggedIn() {
-    return isset($_SESSION['user']);
+    return isset($_SESSION['customer_id']);
 }
 
 
@@ -15,8 +15,9 @@ function isAdmin() {
     if (!isLoggedIn()) {
         return false;
     }
-    return (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin');
+    return (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 1);
 }
+
 
 
  //Enforce login (redirect if not logged in)

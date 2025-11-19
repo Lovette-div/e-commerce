@@ -1,6 +1,12 @@
 <?php
 // Start session to manage user login state
 session_start();
+
+$_SESSION['customer_id'] = $customer['customer_id'];
+$_SESSION['customer_name'] = $customer['customer_name'];
+$_SESSION['customer_email'] = $customer['customer_email'];
+$_SESSION['is_logged_in'] = true;
+
 header('Content-Type: application/json');
 
 //allow post requests
@@ -56,10 +62,10 @@ try {
 
         //url based on role
         $redirectUrl = '';
-        if ($customer['user_role'] == 2 || $customer['user_role'] === 'admin') { // Admin role
+        if ($customer['user_role'] === 1 || $customer['user_role'] === 'admin') { // Admin role
             $redirectUrl = '../admin/category.php';
         } else { // Regular customer
-            $redirectUrl = '../customer/dashboard.php'; 
+            $redirectUrl = '../login/login.php';   //for future work- path will be../dashboard/customer_dashboard.php
         }
 
         //show success response with redirect URL

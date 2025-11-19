@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launber - Online Laundry Platform</title>
+    <title>Launder - Online Laundry Platform</title>
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
@@ -12,78 +12,87 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fbfd;
         }
-        
+
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             color: white;
             padding: 100px 0;
             text-align: center;
         }
-        
+
         .navbar-brand {
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
+            color: #00bcd4 !important;
         }
-        
+
         .btn-custom {
-            border-radius: 25px;
-            padding: 10px 25px;
+            border-radius: 30px;
+            padding: 12px 30px;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline-light:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
         }
-        
+
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             border: none;
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 188, 212, 0.3);
         }
-        
+
         .feature-card {
             border: none;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             height: 100%;
+            border-top: 4px solid #00bcd4;
         }
-        
+
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
-        
+
         .feature-icon {
             font-size: 3rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #00bcd4 0%, #007bff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        
-        .welcome-message {
-            background: #f8f9fa;
-            border-left: 4px solid #667eea;
-            padding: 1rem;
-            margin-bottom: 2rem;
+
+
+        .features-section{
+            background: 
+/*            linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),*/
+            url('../images/laundry2.jpeg') no-repeat center center fixed;
+          background-size: cover;
+          border-radius: 1rem;
+          padding: 60px 30px;
+          backdrop-filter: blur(2px);
         }
-        
+
         footer {
-            background: #343a40;
+            background: linear-gradient(135deg, #007bff 0%, #00bcd4 100%);
             color: white;
-            padding: 20px 0;
-            margin-top: 50px;
+            padding: 25px 0;
+            margin-top: 60px;
+            font-size: 0.95rem;
         }
     </style>
+
 </head>
 <body>
     <!-- Navigation -->
@@ -107,6 +116,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="login/login.php">Login</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link" href="logout.php">Logout</a>
                         </li>
                     <?php elseif ($_SESSION['role'] === 1): ?>
                         <li class="nav-item">
@@ -144,7 +156,7 @@
     </section>
 
     <!-- Main Content -->
-    <div class="container my-5">
+    <div class="container my-5 features-section">
         <!-- Features Section -->
         <div class="row mb-5">
             <div class="col-12 text-center mb-5">
@@ -219,7 +231,7 @@
                 <div class="col-12">
                     <p class="mb-0">
                         <i class="fas fa-shopping-bag me-2"></i>
-                        &copy; 2024 Launder. All rights reserved. 
+                        &copy; 2025 Launder. All rights reserved. 
                     </p>
                 </div>
             </div>
