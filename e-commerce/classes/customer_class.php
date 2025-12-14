@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../db/db_class.php');
+require_once('../settings/db_class.php');
 
 class Customer extends Database {
     
@@ -28,44 +28,55 @@ class Customer extends Database {
                 return ["status" => false, "message" => "Failed to register customer!"];
             }
         } catch (Exception $e) {
+            error_log("Customer addCustomer error: " . $e->getMessage());
             return ["status" => false, "message" => "Error: " . $e->getMessage()];
         }
     }
 
     // Check if email exists
     public function emailExists($email) {
-        $query = "SELECT customer_id FROM customer WHERE customer_email = ?";
-        $stmt = $this->executeQuery($query, [$email]);
-        $result = $stmt->get_result();
-        return $result->num_rows > 0;
+        try {
+            $query = "SELECT customer_id FROM customer WHERE customer_email = ?";
+            $stmt = $this->executeQuery($query, [$email]);
+            $result = $stmt->get_result();
+            return $result->num_rows > 0;
+        } catch (Exception $e) {
+            error_log("Customer emailExists error: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Login customer
     public function loginCustomer($email, $password) {
-        $query = "SELECT * FROM customer WHERE customer_email = ?";
-        $stmt = $this->executeQuery($query, [$email]);
-        $result = $stmt->get_result();
+        try {
+            $query = "SELECT * FROM customer WHERE customer_email = ?";
+            $stmt = $this->executeQuery($query, [$email]);
+            $result = $stmt->get_result();
 
-        if ($result->num_rows === 0) {
-            error_log("Customer class: No user found with email: " . $email);
+            if ($result->num_rows === 0) {
+                error_log("Customer class: No user found with email: " . $email);
+                return ["status" => false, "message" => "Invalid email or password!"];
+            }
+
+            $customer = $result->fetch_assoc();
+            
+            // Debug log
+            error_log("Customer class: Found user with role: " . $customer['user_role'] . " for email: " . $email);
+
+            if (password_verify($password, $customer['customer_pass'])) {
+                unset($customer['customer_pass']); 
+                return ["status" => true, "message" => "Login successful!", "customer" => $customer];
+            }
+
+            error_log("Customer class: Password verification failed for email: " . $email);
             return ["status" => false, "message" => "Invalid email or password!"];
+        } catch (Exception $e) {
+            error_log("Customer loginCustomer error: " . $e->getMessage());
+            return ["status" => false, "message" => "Database error occurred."];
         }
-
-        $customer = $result->fetch_assoc();
-        
-        // Debug log
-        error_log("Customer class: Found user with role: " . $customer['user_role'] . " for email: " . $email);
-
-        if (password_verify($password, $customer['customer_pass'])) {
-            unset($customer['customer_pass']); 
-            return ["status" => true, "message" => "Login successful!", "customer" => $customer];
-        }
-
-        error_log("Customer class: Password verification failed for email: " . $email);
-        return ["status" => false, "message" => "Invalid email or password!"];
     }
 
-    // Get customer by ID - MISSING METHOD
+    // Get customer by ID
     public function getCustomerById($customerId) {
         try {
             $query = "SELECT * FROM customer WHERE customer_id = ?";
@@ -82,7 +93,7 @@ class Customer extends Database {
         }
     }
 
-    // Edit customer - MISSING METHOD
+    // Edit customer
     public function editCustomer($customerId, $name, $email, $country, $city, $contact) {
         try {
             // Check if email exists for other customers
@@ -110,11 +121,12 @@ class Customer extends Database {
                 return ["status" => false, "message" => "No changes made or customer not found!"];
             }
         } catch (Exception $e) {
+            error_log("Customer editCustomer error: " . $e->getMessage());
             return ["status" => false, "message" => "Error: " . $e->getMessage()];
         }
     }
 
-    // Delete customer - MISSING METHOD
+    // Delete customer
     public function deleteCustomer($customerId) {
         try {
             $query = "DELETE FROM customer WHERE customer_id = ?";
@@ -126,6 +138,7 @@ class Customer extends Database {
                 return ["status" => false, "message" => "Customer not found!"];
             }
         } catch (Exception $e) {
+            error_log("Customer deleteCustomer error: " . $e->getMessage());
             return ["status" => false, "message" => "Error: " . $e->getMessage()];
         }
     }
@@ -144,6 +157,7 @@ class Customer extends Database {
 
             return ["status" => true, "customers" => $customers];
         } catch (Exception $e) {
+            error_log("Customer getAllCustomers error: " . $e->getMessage());
             return ["status" => false, "message" => "Error: " . $e->getMessage()];
         }
     }

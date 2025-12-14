@@ -1,70 +1,119 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("addCategoryForm");
-    const tableBody = document.querySelector("#categoryTable tbody");
+document.addEventListener('DOMContentLoaded', function() {
+  const addForm = document.getElementById('addCategoryForm');
+  const addMsg = document.getElementById('addMsg');
+  const tableWrap = document.getElementById('categoriesTableWrap');
 
-    // Fetch categories
-    function loadCategories() {
-        fetch("../actions/fetch_category_action.php")
-            .then(res => res.json())
-            .then(data => {
-                tableBody.innerHTML = "";
-                data.forEach(cat => {
-                    let row = `
-                        <tr>
-                            <td>${cat.id}</td>
-                            <td><input type="text" value="${cat.name}" data-id="${cat.id}" class="edit-name"></td>
-                            <td>
-                                <button class="updateBtn" data-id="${cat.id}">Update</button>
-                                <button class="deleteBtn" data-id="${cat.id}">Delete</button>
-                            </td>
-                        </tr>
-                    `;
-                    tableBody.innerHTML += row;
-                });
-            });
+  const editModalEl = document.getElementById('editModal');
+  const editModal = new bootstrap.Modal(editModalEl);
+  const editForm = document.getElementById('editCategoryForm');
+  const editMsg = document.getElementById('editMsg');
+
+  async function fetchCategories() {
+    tableWrap.innerHTML = '<div class="text-center py-4 text-muted">Loading...</div>';
+    try {
+      const res = await fetch('../actions/fetch_category_action.php', { cache: 'no-store' });
+      const data = await res.json();
+      if (!data.status) {
+        tableWrap.innerHTML = `<div class="text-danger p-3">${data.message}</div>`;
+        return;
+      }
+      renderTable(data.categories || []);
+    } catch (err) {
+      tableWrap.innerHTML = `<div class="text-danger p-3">Error fetching categories</div>`;
     }
+  }
 
-    loadCategories();
+  function renderTable(items) {
+    if (!items.length) {
+      tableWrap.innerHTML = '<div class="text-muted p-3">No categories yet.</div>';
+      return;
+    }
+    let html = `<table class="table table-striped"><thead><tr><th>ID</th><th>Name</th><th>Actions</th></tr></thead><tbody>`;
+    for (const c of items) {
+      html += `<tr><td>${c.cat_id}</td><td>${escapeHtml(c.cat_name)}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-2" data-id="${c.cat_id}" data-name="${escapeHtml(c.cat_name)}" onclick="editCategory(this)">Edit</button>
+          <button class="btn btn-sm btn-outline-danger" data-id="${c.cat_id}" onclick="deleteCategory(this)">Delete</button>
+        </td></tr>`;
+    }
+    html += `</tbody></table>`;
+    tableWrap.innerHTML = html;
+  }
 
-    // Add category
-    form.addEventListener("submit", e => {
-        e.preventDefault();
-        const formData = new FormData(form);
+  addForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    addMsg.innerHTML = '';
+    const formData = new FormData(addForm);
+    try {
+      const res = await fetch('../actions/add_category_action.php', {
+        method: 'POST', body: formData
+      });
+      const data = await res.json();
+      if (data.status) {
+        addMsg.innerHTML = `<div class="alert alert-success small">${data.message}</div>`;
+        addForm.reset();
+        fetchCategories();
+      } else {
+        addMsg.innerHTML = `<div class="alert alert-danger small">${data.message}</div>`;
+      }
+    } catch (err) {
+      addMsg.innerHTML = `<div class="alert alert-danger small">Request failed</div>`;
+    }
+  });
 
-        fetch("../actions/add_category_action.php", {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.text())
-        .then(alert)
-        .then(loadCategories);
+  // Expose edit and delete functions globally (called by inline onclick)
+  window.editCategory = function(btn) {
+    const id = btn.getAttribute('data-id');
+    const name = btn.getAttribute('data-name');
+    document.getElementById('edit_cat_id').value = id;
+    document.getElementById('edit_cat_name').value = name;
+    editMsg.innerHTML = '';
+    editModal.show();
+  };
+
+  window.deleteCategory = async function(btn) {
+    if (!confirm('Delete this category?')) return;
+    const id = btn.getAttribute('data-id');
+    const fd = new FormData();
+    fd.append('cat_id', id);
+    try {
+      const res = await fetch('../actions/delete_category_action.php', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.status) {
+        fetchCategories();
+      } else {
+        alert(data.message || 'Delete failed');
+      }
+    } catch (err) {
+      alert('Request failed');
+    }
+  };
+
+  editForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    editMsg.innerHTML = '';
+    const fd = new FormData(editForm);
+    try {
+      const res = await fetch('../actions/update_category_action.php', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.status) {
+        editMsg.innerHTML = `<div class="alert alert-success small">${data.message}</div>`;
+        fetchCategories();
+        setTimeout(()=>editModal.hide(), 700);
+      } else {
+        editMsg.innerHTML = `<div class="alert alert-danger small">${data.message}</div>`;
+      }
+    } catch (err) {
+      editMsg.innerHTML = `<div class="alert alert-danger small">Request failed</div>`;
+    }
+  });
+
+  function escapeHtml(unsafe) {
+    return (unsafe + '').replace(/[&<>"']/g, function(m) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];
     });
+  }
 
-    // Update / Delete category
-    tableBody.addEventListener("click", e => {
-        if (e.target.classList.contains("updateBtn")) {
-            let id = e.target.dataset.id;
-            let name = e.target.closest("tr").querySelector(".edit-name").value;
-
-            fetch("../actions/update_category_action.php", {
-                method: "POST",
-                body: new URLSearchParams({ id, name })
-            })
-            .then(res => res.text())
-            .then(alert)
-            .then(loadCategories);
-        }
-
-        if (e.target.classList.contains("deleteBtn")) {
-            let id = e.target.dataset.id;
-
-            fetch("../actions/delete_category_action.php", {
-                method: "POST",
-                body: new URLSearchParams({ id })
-            })
-            .then(res => res.text())
-            .then(alert)
-            .then(loadCategories);
-        }
-    });
+  // initial load
+  fetchCategories();
 });
